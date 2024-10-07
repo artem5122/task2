@@ -1,0 +1,8 @@
+﻿  Main.cpp
+  ParallelProcessor.cpp
+C:\Users\Артем\source\repos\Parallel\task2\task2\ParallelProcessor.cpp(56,70): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Артем\source\repos\Parallel\task2\task2\ParallelProcessor.cpp(73,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Артем\source\repos\Parallel\task2\task2\ParallelProcessor.cpp(77,24): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  SequentialProcessor.cpp
+  Создание кода...
+  task2.vcxproj -> C:\Users\Артем\source\repos\Parallel\task2\x64\Debug\task2.exe
