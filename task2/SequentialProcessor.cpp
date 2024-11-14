@@ -18,39 +18,3 @@ void SequentialProcessor::processFile(const std::vector<int>& numbers, uint8_t c
         break;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//std::ifstream inFile(filename);
-//size_t number;
-
-//while (inFile >> number) {
-//    //std::cout << number * multiplier << std::endl;
-//    std::cout << std::pow(pow(number, 0.23), 3.5) << std::endl;
-
-//}
-//inFile.close();
