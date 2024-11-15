@@ -7,6 +7,7 @@
 #include "Functions.h"
 #include <random>
 #include <algorithm>
+#include <chrono>
 
 std::vector<int> generateRandomIndices(int N, int threadCount) {
     std::vector<int> indices;
@@ -32,7 +33,40 @@ std::vector<int> generateRandomIndices(int N, int threadCount) {
     return indices;
 }
 
-std::chrono::duration<double> ParallelProcessor::processFile(std::vector<int>& numbers, int threadCount, int8_t computationMethod, bool shuffle) {
+
+void processRandomSplit(const std::vector<int>& numbers, int threadCount, void(*chosenFunction)(const std::vector<int>&), std::vector<std::thread>& threads) {
+    std::vector<int> indices = generateRandomIndices(numbers.size(), threadCount);
+
+    int prevIdx = 0;
+
+    for (int i = 0; i < indices.size(); ++i) {
+        int startIdx = prevIdx;
+        int endIdx = indices[i];
+        prevIdx = endIdx;
+
+        std::vector<int> chunk(numbers.begin() + startIdx, numbers.begin() + endIdx);
+        threads.emplace_back(chosenFunction, chunk);
+    }
+
+    std::vector<int> lastChunk(numbers.begin() + prevIdx, numbers.end()); // последний участок
+    threads.emplace_back(chosenFunction, lastChunk);
+}
+
+void processEqualSplit(const std::vector<int>& numbers, int threadCount, void(*chosenFunction)(const std::vector<int>&), std::vector<std::thread>& threads) {
+    int chunkSize = numbers.size() / threadCount;
+
+    for (int i = 0; i < threadCount; ++i) {
+        int startIdx = i * chunkSize;
+        int endIdx = (i == threadCount - 1) ? numbers.size() : startIdx + chunkSize;
+
+        std::vector<int> chunk(numbers.begin() + startIdx, numbers.begin() + endIdx);
+        threads.emplace_back(chosenFunction, chunk);
+    }
+}
+
+
+std::chrono::duration<double> ParallelProcessor::processFile(std::vector<int>& numbers, int threadCount, int8_t computationMethod, bool randomSplit, std::chrono::duration<double>& notParallelTime) {
+
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -48,45 +82,29 @@ std::chrono::duration<double> ParallelProcessor::processFile(std::vector<int>& n
     case 2:
         chosenFunction = Functions::complexFunction_2;
         break;
+    default:
+        chosenFunction = Functions::complexFunction_1;
+        break;
     }
 
     std::vector<std::thread> threads;
 
 
-    if (shuffle) {
-        std::vector<int> indices = generateRandomIndices(numbers.size(), threadCount);
-
-        int prevIdx = 0;
-
-        for (int i = 0; i < indices.size(); ++i) {
-            int startIdx = prevIdx;
-            int endIdx = indices[i];
-            prevIdx = endIdx;
-
-            std::vector<int> chunk(numbers.begin() + startIdx, numbers.begin() + endIdx);
-            threads.emplace_back(chosenFunction, chunk);
-        }
-
-        std::vector<int> lastChunk(numbers.begin() + prevIdx, numbers.end()); //последний участок
-        threads.emplace_back(chosenFunction, lastChunk);
+    if (randomSplit) {
+        processRandomSplit(numbers, threadCount, chosenFunction, threads);
     }
     else {
-        int chunkSize = numbers.size() / threadCount;
-
-        for (int i = 0; i < threadCount; ++i) {
-            int startIdx = i * chunkSize;
-            int endIdx = (i == threadCount - 1) ? numbers.size() : startIdx + chunkSize;
-
-            std::vector<int> chunk(numbers.begin() + startIdx, numbers.begin() + endIdx);
-            threads.emplace_back(chosenFunction, chunk);
-        }
+        processEqualSplit(numbers, threadCount, chosenFunction, threads);
     }
+
     auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> notParallelTime = end - start;
+    notParallelTime = end - start;
 
     for (auto& t : threads) {
         t.join();
     }
-    return notParallelTime;
+    auto end_2 = std::chrono::high_resolution_clock::now();
+
+    return end_2 - start;
 }
 

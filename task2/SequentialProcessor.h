@@ -3,10 +3,11 @@
 
 #include <vector>
 #include <string>
+#include <chrono>
 
 class SequentialProcessor {
 public:
-    static void processFile(const std::vector<int>& numbers, uint8_t computationMethod);
+    static std::chrono::duration<double> processFile(const std::vector<int>& numbers, uint8_t computationMethod);
 };
 
 #endif

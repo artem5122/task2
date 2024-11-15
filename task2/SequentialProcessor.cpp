@@ -2,10 +2,12 @@
 #include <fstream>
 #include <iostream>
 #include "Functions.h"
+#include <chrono>
 
 
 
-void SequentialProcessor::processFile(const std::vector<int>& numbers, uint8_t computationMethod) {
+std::chrono::duration<double> SequentialProcessor::processFile(const std::vector<int>& numbers, uint8_t computationMethod) {
+    auto start = std::chrono::high_resolution_clock::now();
     switch (computationMethod) {
     case 0:
         Functions::simpleFunction(numbers);
@@ -17,4 +19,6 @@ void SequentialProcessor::processFile(const std::vector<int>& numbers, uint8_t c
         Functions::complexFunction_2(numbers);
         break;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    return end - start;
 }

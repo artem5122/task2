@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EnviromentVariables.h" />
     <ClInclude Include="FileGenerator.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="NumbersGenerator.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="SequentialProcessor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EnviromentVariables.cpp" />
     <ClCompile Include="FileGenerator.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Main.cpp" />

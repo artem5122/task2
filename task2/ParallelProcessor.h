@@ -7,7 +7,7 @@
 
 class ParallelProcessor {
 public:
-    static std::chrono::duration<double> processFile(std::vector<int>& numbers, int threadCount, int8_t computationMethod, bool shuffle);
+    static std::chrono::duration<double> processFile(std::vector<int>& numbers, int threadCount, int8_t computationMethod, bool randomSplit, std::chrono::duration<double>& notParallelTime);
 };
 
 #endif
