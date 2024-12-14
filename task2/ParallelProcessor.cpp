@@ -33,7 +33,6 @@ std::vector<int> generateRandomIndices(int N, int threadCount) {
     return indices;
 }
 
-
 void processRandomSplit(const std::vector<int>& numbers, int threadCount, void(*chosenFunction)(const std::vector<int>&), std::vector<std::thread>& threads) {
     std::vector<int> indices = generateRandomIndices(numbers.size(), threadCount);
 
